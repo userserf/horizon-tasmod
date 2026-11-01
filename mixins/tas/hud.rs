@@ -1,8 +1,9 @@
 fn tas_hud(
     game: &mut crate::game::Game<'_>,
     batch: &mut horizon_client::hud::HudBatch,
-    _corners: &mut horizon_client::extras_hud::Corners,
+    corners: &mut horizon_client::extras_hud::Corners,
 ) {
+    let _ = corners;
     let (text, color) = crate::game::tas::with_tas(|tas| {
         let c = match tas.mode {
             crate::game::tas::TasMode::Recording => 0xFF5555,
