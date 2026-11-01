@@ -1,7 +1,7 @@
 fn tas_hud(
     game: &mut crate::game::Game<'_>,
     batch: &mut horizon_client::hud::HudBatch,
-    corners: &mut horizon_client::extras_hud::Corners,
+    _corners: &mut horizon_client::extras_hud::Corners,
 ) {
     let (text, color) = crate::game::tas::with_tas(|tas| {
         let c = match tas.mode {
@@ -14,7 +14,7 @@ fn tas_hud(
     });
 
     let w = game.native_text_width(&text) + 4.0;
-    let (x, y) = corners.place(crate::game::extras::Corner::TopLeft, w, 12.0);
+    let (x, y) = (6.0_f32, 6.0_f32);
     game.native_fill(batch, [x, y, w, 12.0], 0x7800_0000);
     game.native_text(batch, &text, [x + 2.0, y + 2.0], color, true);
 }
