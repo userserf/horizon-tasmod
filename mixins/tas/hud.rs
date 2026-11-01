@@ -14,7 +14,7 @@ fn tas_hud(
     });
 
     let w = game.native_text_width(&text) + 4.0;
-    let (x, y) = corners.place(crate::extras::Corner::TopLeft, w, 12.0);
+    let (x, y) = corners.place(crate::game::extras::Corner::TopLeft, w, 12.0);
     game.native_fill(batch, [x, y, w, 12.0], 0x7800_0000);
     game.native_text(batch, &text, [x + 2.0, y + 2.0], color, true);
 }
