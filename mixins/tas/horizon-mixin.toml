@@ -4,12 +4,15 @@ version = "0.1.0"
 priority = 100
 
 [compatibility]
+horizon_revision = "ba6344a59cb9e755b730dcf02285fc0d33b97d3c"
 game = "26.3"
 hooks = 1
 
 [[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
 name = "tas"
-path = "runtime.rs"
+source = "runtime.rs"
 
 [[injection]]
 id = "tick"
