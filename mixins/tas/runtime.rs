@@ -1,20 +1,27 @@
-//! Нативный мод `tas` для установки через лаунчер Horizon («ADD A NATIVE MOD FROM GITHUB»).
-//!
-//! Когда вы вставляете ссылку на GitHub-репозиторий с этим кодом в лаунчер Horizon,
-//! лаунчер сам проверяет `compatibility.json` и собирает мод в ваш профиль игры.
-//!
-//! Управление в игре:
-//! - `key.keyboard.r` : Начать / остановить потиковую запись макроса (20 TPS)
-//! - `key.keyboard.p` : Воспроизвести записанный макрос в игре
-//! - `key.keyboard.f8` : Пошаговый режим (+1 тик)
-//! - `key.keyboard.f9` : Создать Savestate (точку сохранения)
-//! - `key.keyboard.f10` : Откатиться к Savestate и продолжить запись
-//! - Команды в чате: `/tas record <имя>`, `/tas stop`, `/tas play <имя>`, `/tas save <имя>`, `/tas load <имя>`
+// Нативный мод tas для установки через лаунчер Horizon (ADD A NATIVE MOD FROM GITHUB).
+// Управление в игре:
+// - key.keyboard.r : Начать / остановить потиковую запись макроса (20 TPS)
+// - key.keyboard.p : Воспроизвести записанный макрос в игре
+// - key.keyboard.f8 : Пошаговый режим (+1 тик)
+// - key.keyboard.f9 : Создать Savestate (точку сохранения)
+// - key.keyboard.f10 : Откатиться к Savestate и продолжить запись
+// - Команды в чате: /tas record <имя>, /tas stop, /tas play <имя>, /tas save <имя>, /tas load <имя>
 
 use std::fs::{self, File};
 use std::io::{BufRead, BufReader, BufWriter, Write};
 use std::path::PathBuf;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Mutex, OnceLock};
+
+static INJECTING: AtomicBool = AtomicBool::new(false);
+
+pub fn is_injecting() -> bool {
+    INJECTING.load(Ordering::Relaxed)
+}
+
+pub fn set_injecting(val: bool) {
+    INJECTING.store(val, Ordering::Relaxed);
+}
 
 pub const KEY_RECORD: &str = "key.keyboard.r";
 pub const KEY_PLAY: &str = "key.keyboard.p";
@@ -33,7 +40,6 @@ pub const FLAG_SPRINT: u16   = 1 << 6; // key.keyboard.left.control
 pub const FLAG_ATTACK: u16   = 1 << 7; // key.mouse.left
 pub const FLAG_USE_ITEM: u16 = 1 << 8; // key.mouse.right
 
-#[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct TickFrame {
     pub mask: u16,
